@@ -18,6 +18,6 @@ export default {
 
 <style  >
 #app-container { 
-margin: 40px 0px 0px 0px;
+margin: 20px 0px 0px 0px;
 }
 </style>

@@ -3,13 +3,21 @@
         <div class="clearfix">
             <div class="icon"> </div>
             <div class="text">
-                <div>1231231</div>
-                 <div class="desc">1231231</div>
+                <div>{{title || "Đang cập nhập ..."}}</div>
+                 <div class="desc">{{sub || "Đang cập nhập ..."}}</div>
             </div>
         </div> 
+        
     </div>
 </template>
-
+<script>
+export default {
+  name: 'SingleCardInfo',
+  components: {
+  },
+  props:["title","sub"]
+}
+</script>
 <style scoped>
 .single-card {
 position: relative;

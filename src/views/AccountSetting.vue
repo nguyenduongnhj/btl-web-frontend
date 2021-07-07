@@ -1,27 +1,13 @@
 <template>
-  <b-container>
-  <br>
-    <div style="position:relative">
-      <b-row>
-        <b-col md="4" sm="12">
-          <LeftMenu/>
-        </b-col>
-        <b-col md="8" sm="12">
-          <GeneralInfo/>
-        </b-col> 
-      </b-row>
-    </div>
-  </b-container>
+   <GeneralInfo/>
 </template>
 
 <script>
 
-import GeneralInfo from "@/components/AccountSetting/GeneralInfo.vue"
-import LeftMenu from "@/components/AccountSetting/LeftMenu.vue"
+import GeneralInfo from "@/components/AccountSetting/GeneralInfo.vue" 
 export default {
   name: 'AccountSetting',
-  components: { 
-    LeftMenu,
+  components: {  
     GeneralInfo
   }
 }

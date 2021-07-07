@@ -1,6 +1,6 @@
 <template>
     <div :class="classDisable">
-        <div class="title">{{ title }}</div>
+        <div class="title" :style="{'font-size':(size||10)+'px'}">{{ title }}</div>
         <slot/>
     </div>
 </template>
@@ -13,8 +13,9 @@
     margin-bottom: 10px;
 }
 .input-info-box  .title {
-font-size: 10px;
-color:#333333;
+    font-size: 10px;
+    color:#333333;
+    font-weight: bold;
 }
 .input-info-box.disable {
     background: #F3F3F3;
@@ -23,7 +24,7 @@ color:#333333;
 <script> 
 export default {
   name: 'InputInfoBox',
-  props: ['title','disable'],  
+  props: ['title','disable', 'size'],  
   computed: {
     classDisable(){
         if (this.disable){

@@ -1,9 +1,18 @@
 <template>
     <div class="box-shadown profile-introduction">
-        <div class="title"> Gioi thieu ve do ra gon</div>
-         <div class="content"> Gioi thieu ve  do ra gon</div>
+        <div v-if="!hideTitle" class="title">Giới thiệu về {{(data && data.full_name)|lastWord}}</div>
+         <div class="content">  {{data && data.profile && data.profile.introduce}}</div>
     </div>
 </template>
+<script>
+export default {
+  name: 'ProfileIntroduction',
+  components: {
+
+  },
+  props:["data","hideTitle"]
+}
+</script>
 
 <style scoped>
 .profile-introduction .title {

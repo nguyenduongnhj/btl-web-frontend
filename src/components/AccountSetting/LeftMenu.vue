@@ -1,9 +1,8 @@
 <template> 
     <b-row class="box-shadown menu-container">
-      <LeftMenuItem title="Thông tin chung"/>
-      <LeftMenuItem title="Hồ sơ gia sư"/>
-      <LeftMenuItem title="Bảo mật"/>
-      <LeftMenuItem title="Thanh toán" />
+      <LeftMenuItem path="/account-setting" title="Thông tin chung" icon="ic_caculator.png"/>
+      <LeftMenuItem path="/tutor-profile" title="Thông tin chi tiết" icon="ic_contact.png"/>
+      <LeftMenuItem path="/account-security" title="Bảo mật"  icon="ic_protect.png"/> 
     </b-row> 
 </template>
 

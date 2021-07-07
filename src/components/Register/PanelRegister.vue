@@ -1,3 +1,5 @@
+
+
 <template>
     <div class="box-shadown login-panel">
         <h2>  Đăng nhập để sử dụng </h2>
@@ -13,13 +15,21 @@
             
             <div class="email-login">
                 <h3>Hoặc sử dụng email </h3>
-
+             
+                <b-alert
+                    variant="danger" 
+                    fade
+                    :show="error"
+                    @dismissed="showDismissibleAlert=false"
+                    >
+                 {{$t(message)}}
+                </b-alert> 
                 <div class="content"> 
                      
                     <b-form-group class="login-input">
                         <b-form-input
                         id="input-2"
-                        v-model="account"
+                        v-model="fullname"
                         placeholder="Họ và tên"
                         required
                         ></b-form-input>
@@ -28,18 +38,24 @@
                          <b-form-group class="login-input">
                         <b-form-input
                         id="input-2"
-                        v-model="account"
+                        v-model="email"
                         placeholder="Email"
                         required
                         ></b-form-input>
-                        
                     </b-form-group>
-                     
+                         <b-form-group class="login-input">
+                        <b-form-input
+                        id="input-2"
+                        v-model="phoneNumber"
+                        placeholder="Số điện thoại"
+                        required
+                        ></b-form-input>   
+                    </b-form-group> 
                     <b-form-group class="login-input">
                         <b-form-input
                         id="input-2"
                         type="password"
-                        v-model="account"
+                        v-model="password"
                         placeholder="Mật khẩu"
                         required
                         ></b-form-input> 
@@ -48,25 +64,27 @@
                         <b-form-input
                         id="input-2"
                         type="password"
-                        v-model="account"
+                        v-model="confirmPassword"
                         placeholder="Nhập lại mật khẩu"
                         required
                         ></b-form-input> 
                     </b-form-group> 
-                     <div class="note" > <input type="checkbox"/>  &nbsp; Tôi đồng ý với <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách bảo mật</a> của studyduo.com </div>
+                     <div class="note" > <input type="checkbox" v-model="checkPrivacyPolicy"/>  &nbsp; Tôi đồng ý với <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách bảo mật</a> của studyduo.com </div>
                 </div> 
                <div>
-                <b-button block  variant="success">Đăng ký</b-button>
+
+                <b-button  style="width:100%"  v-if="checkPrivacyPolicy" v-on:click="onRegister()" block  variant="success">{{$t("register")}}</b-button>
+                 <b-button style="width:100%"  v-if="!checkPrivacyPolicy" block  variant="default" disabled>{{$t("register")}}</b-button>
                </div>
                <br>
                <hr>
                 <a href="#" class="btn btn-forgot btn-block" > 
-                    Quên mật khẩu?
+                    {{$t("forget_password")}} 
                 </a> 
                
                 <div>
                  <br>
-                       <strong> Khó khăn khi tạo tài khoản? </strong><br>
+                    <strong> Khó khăn khi tạo tài khoản? </strong><br>
                         Vui lòng gửi email hỗ trợ tới admin@studyduo.com để được hỗ trợ
                 </div>
             </div>
@@ -74,6 +92,71 @@
         </div>
     </div>
 </template>
+
+
+<script>
+
+import { createNamespacedHelpers } from 'vuex'
+const { mapState, mapActions, mapGetters } = createNamespacedHelpers('authen')
+
+
+export default {
+  name: 'PANEL REGISTER',
+  components:{
+      
+  },
+  data(){
+      return {
+      email:"",
+      password:"",
+      confirmPassword:"",
+      fullname:"",
+      phoneNumber:"",
+      checkPrivacyPolicy: false
+  }
+  },
+  computed:{
+      ...mapState({"loading":"registerLoading","data":"data"}),
+      ...mapGetters({
+          error:"isRegisterError",
+          message:"errorMessage"
+      })
+  },
+  methods:{
+      onRegister(){
+        
+          this.apiRegister(
+              {
+                username: this.email,
+                password: this.password,
+                confirmPassword: this.confirmPassword,
+                fullname: this.fullname,
+                phoneNumber: this.phoneNumber,
+                email: this.email
+              })
+      },
+      ...mapActions({
+      apiRegister: 'actionRegister'
+    })
+  }, 
+  watch: {
+        data: function (val) {
+           if (this.isRegisterError || val == null){
+               return
+           }
+
+           if (!val.success) {
+                return 
+           }
+            this.$router.push('/')
+ 
+        }
+    } 
+}
+
+</script>
+
+ 
 
 <style scoped>
 

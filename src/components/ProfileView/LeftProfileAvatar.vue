@@ -4,20 +4,61 @@
            Đã xác thực
         </div>
         <center>
-            <div class="avatar-img" style="background-image: url('https://s.memehay.com/files/posts/20201110/meo-trang-beo-u-cuoi-voi-anh-mat-kha-o.jpg')"/>
+            <div class="avatar-img" :style="`background-image: url('${getAvatar(data&&data.avatar)}')`"/>
         </center>
 
         <div class="profile-name">
-            <span> Do ra gon </span>
+            <span> {{ data && data.full_name}} </span>
         </div>
         <div class="profile-slug">
-            <span> ph-xh@123 </span>
+            <span> {{roleText()}} </span>
         </div>
+        <hr style="margin: 10px -16px;background:#858585">
+         <div class="flow-card clearfix">
+            <div class="icon"> </div>
+            <div class="text">
+                <div>{{ (data && data.total_followers) || "0"}}</div>
+                 <div class="desc">Người theo dõi</div>
+            </div>
+            <b-button v-if="!hideFlowButton" @click="flow" class="btn-flow" size="md" variant="success"> Theo dõi</b-button>
+        </div> 
+        
+
     </div>
 
 </template>
 
+<script>
+import { buildAvatarUrl } from "@/network/ApiProvider";
+
+export default {
+  name: 'LeftProfileAvatar',
+  components: {
+
+  },
+  props: ["data","hideFlowButton"],
+  methods: {
+    roleText(){
+       return   (this.data && this.data.roles &&(this.data.roles.indexOf("TUTOR") >= 0 )) ?"Người dùng" : "Người dùng"
+    },
+    getAvatar(url) {
+      return buildAvatarUrl(url);
+    },
+    flow() {
+
+    }
+  }
+}
+</script>
+
+
 <style scoped>
+.btn-flow {
+    position: absolute;
+    top: 7px;
+    right: 5px;
+    font-size: 12px;
+}
 .profile-avatar-view-container{
 background-color: white;
 border-radius: 8px;
@@ -45,7 +86,7 @@ height: 150px;
  border-radius:75px;
  background-position: center;
  background-size:cover;
- margin-top: 60px
+ margin-top: 40px
 }
 .profile-avatar-view-container .profile-name{
 margin-top: 24px;
@@ -61,4 +102,30 @@ font-weight: 400;
 color: #858585;
 text-align: center;
 }
+</style>
+
+<style scoped>
+.flow-card {
+position: relative;
+}
+.flow-card .icon{
+width: 40px;
+height: 40px;
+border-radius: 20px;
+background-color: #f0f0f0;
+position: absolute;
+}
+
+.flow-card .text{
+font-weight: bold;
+font-size: 14px;
+margin-left:50px;
+}
+.flow-card .text .desc {
+font-weight: 400;
+font-size: 12px;
+color:#858585
+}
+
+
 </style>

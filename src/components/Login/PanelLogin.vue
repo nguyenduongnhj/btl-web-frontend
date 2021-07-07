@@ -19,7 +19,7 @@
                     :show="error"
                     @dismissed="showDismissibleAlert=false"
                     >
-                 {{message}}
+                {{$t(message)}}
                 </b-alert>     
                 <div class="content"> 
                      
@@ -47,7 +47,7 @@
               
 
 
-                <b-button  v-on:click="onLogin"  block  variant="success">  <clip-loader v-if="loading" style="display:inline" :loading="loading" color="#ffffff" size="10px" /> Đăng nhập</b-button>
+                <b-button style="width:100%" v-on:click="onLogin"  block  variant="success">  <clip-loader v-if="loading" style="display:inline" :loading="loading" color="#ffffff" size="10px" />{{$t("login")}}</b-button>
                </div>
                <br>
                <hr>
@@ -58,13 +58,66 @@
                 <div>
                  <br>
                        <strong> Bạn không đăng nhập được tài khoản? </strong><br>
-                        Vui lòng gửi email hỗ trợ tới admin@studyduo.com để được hỗ trợ
+                        Vui lòng gửi email hỗ trợ tới caidmconcho@gmail.com để được hỗ trợ
                 </div>
             </div>
 
         </div>
     </div>
 </template>
+
+<script>
+
+import { createNamespacedHelpers } from 'vuex'
+import { isAuthen, getUserInfo } from "@/common/AppData"
+const { mapState, mapActions, mapGetters } = createNamespacedHelpers('authen')
+
+
+export default {
+  name: 'PANEL LOGIN',
+  components:{
+      
+  },
+  mounted() {
+      if (isAuthen()){
+        let user = getUserInfo()
+        this.$router.push('/profile/'+user._id) 
+      }
+  },
+  data(){
+      return {
+      username:"phhieu29@gmail.com",
+      password:"12345678" 
+  }
+  },
+  computed:{
+      ...mapState(["loading","data"]),
+      ...mapGetters({
+          error:"isError",
+          message:"errorMessage"
+      })
+  },
+  methods:{
+      onLogin(){ 
+          this.apiLogin({username: this.username,password: this.password})
+      },
+      ...mapActions({
+      apiLogin: 'actionLogin',
+      changeUserInfo: 'actionChangeUserInfo'
+    })
+  }, 
+  watch:{
+      data:function(val){
+        if (val == null){
+            return
+        }
+          console.log('data',)
+        this.changeUserInfo({name:val.user.first_name, avatar: val.user.avatar})
+         this.$router.push('/profile/'+val.user._id) 
+      }
+  }
+}
+</script>
 
 <style scoped>
 
@@ -115,39 +168,3 @@ hr {
     padding-bottom: 10px;
 }
 </style>
-
-<script>
-
-import { createNamespacedHelpers } from 'vuex'
-const { mapState, mapActions, mapGetters } = createNamespacedHelpers('authen')
-
-
-export default {
-  name: 'PANEL LOGIN',
-  components:{
-      
-  },
-  data(){
-      return {
-      username:"",
-      password:"" 
-  }
-  },
-  computed:{
-      ...mapState(["loading"]),
-      ...mapGetters({
-          error:"isError",
-          message:"errorMessage"
-      })
-  },
-  methods:{
-      onLogin(){
-          console.log("state",this.$store.state.authen.error  )
-          this.apiLogin({username: this.username,password: this.password})
-      },
-      ...mapActions({
-      apiLogin: 'actionLogin'
-    })
-  }, 
-}
-</script>

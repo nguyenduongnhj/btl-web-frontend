@@ -2,21 +2,21 @@
         <div>
             <b-col sm="12" class="d-block d-md-none"  >
                 <b-row>
-                    <b-col>
-                        <div class="box-shadown">home</div>
+                    <b-col class="text-center">
+                        <div class="box-shadown"><img src="@/assets/Images/profile/ic_donate.png"/></div>
                     </b-col>
-                    <b-col  >
-                    <div class="box-shadown"> message </div>
+                    <b-col class="text-center" >
+                    <div class="box-shadown"> <img src="@/assets/Images/profile/ic_message.png"/></div>
                     </b-col>
-                    <b-col >
-                    <div class="box-shadown"> report </div>
+                    <b-col class="text-center" >
+                    <div class="box-shadown"> <img src="@/assets/Images/profile/ic_report.png"/></div>
                     </b-col>
                 </b-row>
             </b-col>
             <div class="d-none d-md-block float-navigation"  >
-                <div class="box-shadown">H</div>
-                 <div class="box-shadown">M</div>
-                 <div class="box-shadown">R</div>
+                <div class="box-shadown"><img src="@/assets/Images/profile/ic_donate.png"/></div>
+                 <div class="box-shadown"><img src="@/assets/Images/profile/ic_message.png"/></div>
+                 <div class="box-shadown"><img src="@/assets/Images/profile/ic_report.png"/></div>
             </div>
 
         </div>
@@ -26,8 +26,12 @@
 .float-navigation{
     position: absolute;
     z-index: 2;
-    right: -50px;
+    right: -55px;
     top: 0px;
 
+}
+.box-shadown{
+     padding:10px 10px;
+     cursor: pointer;
 }
 </style>

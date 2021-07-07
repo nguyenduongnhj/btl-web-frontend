@@ -1,27 +1,31 @@
 <template>
     <div class="box-shadown mutil-card-info">
-         <div class="action"> Xem thêm </div>
-        <div class="title">Học vấn</div>
+         <div v-if="showViewMore" class="action"> Xem thêm </div>
+        <div class="title">{{title}}</div>
         <div class="content">
-            <div class="title">Trường đại học</div>
-            <div class="clearfix item">
+            <div v-for="x in data" :key="x.title">
+            <div v-if="x.title" class="title">{{x.title}}</div>
+            <div v-for="k in x.data" :key="k.title" class="clearfix item">
                 <div class="icon"> </div>
                 <div class="text">
-                    <div>1231231</div>
-                    <div class="desc">2019</div>
+                    <div>{{k.title}}</div>
+                    <div class="desc">{{k.sub}}</div>
                 </div>
             </div> 
-             <div class="clearfix item">
-                <div class="icon"> </div>
-                <div class="text">
-                    <div>1231231</div>
-                    <div class="desc">2019</div>
-                </div>
-            </div> 
+             </div>
             
         </div>
     </div>
 </template>
+<script>
+export default {
+  name: 'MutilCardInfo',
+  components: {
+
+  },
+  props:["showViewMore","title","data"]
+}
+</script>
 
 <style scoped>
 .mutil-card-info .title {

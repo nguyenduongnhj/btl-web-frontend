@@ -1,7 +1,7 @@
 <template>
     <div class="box-shadown box-post-article">
         <div>
-            <div class="user-avatar">
+            <div class="user-avatar" :style="{ backgroundImage: 'url(' + getAvatar() + ')' }">
 
             </div>
             <div @click="touchPost" class = "content-placehoder"> Chào {{data.name|lastWord}} hãy chia sẻ gì đó</div>
@@ -17,6 +17,7 @@
     </div>
 </template>
 <script>
+import { buildAvatarUrl } from "@/network/ApiProvider";
 
 export default {
   name: 'PostArticleBox',
@@ -33,6 +34,9 @@ export default {
       this.data = this.user
   },
   methods: {
+    getAvatar() {
+     return buildAvatarUrl(this.data && this.data.avatar).replace(/\\/g,"/");
+    },
       touchImage(){
         this.$emit("action",{type:"image"})
       },
@@ -41,6 +45,11 @@ export default {
       },
       touchVideo() {
            this.$emit("action",{type:"video"})
+      }
+  },
+  watch:{
+      user(val){
+          this.data = val
       }
   }
 }
@@ -56,6 +65,7 @@ export default {
     height: 30px;
     background-color: red;
     border-radius: 15px;
+    background-size: cover;
 }
 .content-placehoder {
     position: absolute;

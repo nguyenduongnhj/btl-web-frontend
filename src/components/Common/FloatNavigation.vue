@@ -12,12 +12,7 @@
                     <div class="box-shadown"> <img src="@/assets/Images/profile/ic_report.png"/></div>
                     </b-col>
                 </b-row>
-            </b-col>
-            <div class="d-none d-md-block float-navigation"  >
-                <div class="box-shadown"><img src="@/assets/Images/profile/ic_donate.png"/></div>
-                 <div class="box-shadown"><img src="@/assets/Images/profile/ic_message.png"/></div>
-                 <div class="box-shadown"><img src="@/assets/Images/profile/ic_report.png"/></div>
-            </div>
+            </b-col> 
 
         </div>
 </template>

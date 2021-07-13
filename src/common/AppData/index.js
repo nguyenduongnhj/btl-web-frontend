@@ -1,4 +1,7 @@
- 
+
+
+
+
 export const saveAuthData = (data) => {
     let dataString = JSON.stringify(data)
     localStorage.setItem("auth_data",dataString)

@@ -1,3 +1,4 @@
+
 export const HOST = "http://localhost:3000"
 
 export const endpoint = {
@@ -9,7 +10,18 @@ export const endpoint = {
     updatePassword:"auth/change_password",
     tutorInfo:"users/me/profile",  
     updateTutor:"tutors/update",
-    userProfile:"users"
+    userProfile:"users",
+    uploadPost:"posts/upload",
+    uploadImages:"upload/images",
+    getUserPosts:"posts",
+    likePost:"posts/like",
+    dislikePost:"posts/dislike",
+    flowUser:"follows/follow",
+    unFollowUser:"follows/unfollow",
+    checkFlow:"users/me/followings",
+    postDetail:"posts/detail",
+    getComments:"comments",
+    postComment:"comments/upload"
 }
 
 export const prefixToken = "Bearer "

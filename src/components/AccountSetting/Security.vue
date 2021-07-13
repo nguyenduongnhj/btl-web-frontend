@@ -80,7 +80,7 @@
           <div class="item disable">
             <h2>Khoá tải khoản</h2>
             <p>
-              <b style="color: #b12000">Khoá tài khoản của bạn </b>
+              <b style="color: #b12000">Khoá tài khoản appkhongten.com của bạn </b>
             </p>
           </div>
         </InputInfoBox>

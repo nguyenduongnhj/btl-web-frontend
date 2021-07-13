@@ -4,8 +4,7 @@ import {
     REGISTER_LOADING, REGISTER_FAILED, REGISTER_SUCCESS, LOGOUT,
     CHANGE_USER_INFO
 } from "./types"
-import {login,register} from "@/network/ApiService.js"
-
+import {login,register} from "@/network/ApiService.js" 
 import { saveAuthData, cleanAuthData } from "@/common/AppData"
 export default{
     actionLogout: ({ commit })=>{

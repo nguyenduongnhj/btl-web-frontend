@@ -49,10 +49,10 @@
         </InputInfoBox>
 
         <InputInfoBox title="Số điện thoại" :disable="true">
-          <input class="input" v-model="data.phone_number"  readonly="readonly"/>
+          <input class="input" v-model="data.phone_number" disabled />
         </InputInfoBox>
         <InputInfoBox title="Địa chỉ email" :disable="true">
-          <input class="input" v-model="data.email"  readonly="readonly"/>
+          <input class="input" v-model="data.email" disabled/>
         </InputInfoBox>
         <InputInfoBox title="Giới tính">
           <b-dropdown
@@ -161,7 +161,7 @@ export default {
       this.data.gender = gender;
     },
     getAvatar(url) {
-      return buildAvatarUrl(url);
+      return buildAvatarUrl(url).replace(/\\/g,"/");
     },
     onUpdateData() {
       this.data.birthday = moment(this.birthday, 'DD/MM/YYYY')

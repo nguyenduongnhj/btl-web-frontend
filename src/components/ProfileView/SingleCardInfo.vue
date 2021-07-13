@@ -1,7 +1,7 @@
 <template>
     <div class="box-shadown single-card ">
         <div class="clearfix">
-            <div class="icon"> </div>
+            <div class="icon"> <img v-if="icon" :src="require('/src/assets/Images/profile/'+this.icon)"></div>
             <div class="text">
                 <div>{{title || "Đang cập nhập ..."}}</div>
                  <div class="desc">{{sub || "Đang cập nhập ..."}}</div>
@@ -14,8 +14,9 @@
 export default {
   name: 'SingleCardInfo',
   components: {
+
   },
-  props:["title","sub"]
+  props:["title","sub",'icon']
 }
 </script>
 <style scoped>
@@ -41,5 +42,14 @@ font-size: 12px;
 color:#858585
 }
 
+
+.icon{
+  padding: 8px
+}
+.icon img{
+width:100%;
+height: 100%;
+
+}
 
 </style>

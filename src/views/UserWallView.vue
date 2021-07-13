@@ -3,56 +3,62 @@
     <div style="position:relative">
       <b-row>
         <b-col md="4" sm="12">
-        <LeftProfileAvatar :data ="profileData" /> 
+        <LeftProfileAvatar @flow="handleFlow($event)" :hideFlowButton="true" :data ="profileData" /> 
         <ProfileIntroduction :hideTitle="true" :data="profileData" />
         <FloatNavigation  :data ="profileData"/>
-        <SingleCardInfo :title="getCity()" sub="Thành Phố đang sinh sống " />
-        <SingleCardInfo :title="getDateOfBirth()" sub="Ngày sinh" />
-
-        <SingleCardInfo :title="getRate()" sub="Mọi người đánh giá" /> 
+        <SingleCardInfo  icon="ic_location.png"  :title="getCity()" sub="Thành Phố đang sinh sống "/>
+        <SingleCardInfo  icon="ic_user.png"  :title="getDateOfBirth()" sub="Ngày sinh" /> 
+        <SingleCardInfo icon='ic_rate.png' :title="getRate()" sub="Mọi người đánh giá" /> 
+        <div class="box-shadown btn-view-info" style="text-align:center" ><router-link :to="'/profile/'+profileData._id">Xem thông tin chi tiết</router-link></div>
         </b-col>
         <b-col md="8" sm="12">
-        <PostArticleBox @action="doActionPost"/>
-        <MutilCardInfo v-if="getSchoolData()" title="Học vấn" :data="getSchoolData()"/>
-        <MutilCardInfo v-if="getPrizeData()" title="Giải thưởng" :data="getPrizeData()"/>
-        <MutilCardInfo v-if="getSpecializedData()" title="Chứng chỉ" :data="getSpecializedData()" />
-        <MutilCardInfo v-if="getSkillData()" title="Kỹ năng" :data="getSkillData()" />
+          <PostArticleBox @action="doActionPost" :user="profileData"/>
+          <PostBoxItem  @openDetail="openDetail($event)" @profileView="openProfile($event)" @like="onTouchLike($event)" v-for="item in articles" :key="item.id" :data="item"/>
         </b-col> 
       </b-row>
     </div>
-    <ModalPostArticle ref="modal_post"/>
+    <ModalPostArticle @submit="onSubmitUpload($event)" :data="profileData" ref="modal_post"/>
+    <scroll-loader :loader-method="loadMoreData" :loader-disable="disableLoadMore"></scroll-loader>
   </b-container>
 </template>
 
 <script>
+import Vue from 'vue'
 import LeftProfileAvatar from "@/components/ProfileView/LeftProfileAvatar.vue"
 import SingleCardInfo from "@/components/ProfileView/SingleCardInfo.vue"
 import ProfileIntroduction from "@/components/ProfileView/ProfileIntroduction.vue"
-import MutilCardInfo from "@/components/ProfileView/MutilCardInfo.vue"
 import FloatNavigation from "@/components/Common/FloatNavigation.vue"
 import PostArticleBox from "@/components/UserWall/PostArticleBox.vue"
 import i18next from "@/common/i18n"
 import ModalPostArticle from "@/components/Modal/ModalPostArticle.vue"
+import PostBoxItem from "@/components/UserWall/PostBoxItem.vue"
 import { createNamespacedHelpers } from 'vuex'
 import { isAuthen, getUserInfo } from "@/common/AppData"
 const userModule = createNamespacedHelpers('user')
-
+const postModule = createNamespacedHelpers('post')
 export default {
   name: 'ProfileView',
   components: {
     LeftProfileAvatar,
     SingleCardInfo,
     ProfileIntroduction,
-    MutilCardInfo,
     FloatNavigation,
     PostArticleBox,
-    ModalPostArticle
+    ModalPostArticle,
+    PostBoxItem
   },
   mounted(){ 
     if (isAuthen()) {
         this.getPublicProfile()
     }
-
+  
+  },
+  data(){
+    return {
+      articles:[],
+      nextPage: null,
+      disableLoadMore: false,
+    }
   },
   computed:{
       ...userModule.mapState(
@@ -60,29 +66,59 @@ export default {
           "loading":"isGetPublicInfoLoading",
           "isError":"isGetPublicInfoError",
           "profileData":"getPublicInfoData",
-          "errorMessage":"getPublicDataMessage"
-        }
-        
-        )
+          "errorMessage":"getPublicDataMessage",  
+        } ), 
+        ...postModule.mapState({
+           "uploadLoading":"isUpLoading"
+        })
   },
   methods:{ 
     ...userModule.mapActions({ 
-      "doGetPublicInfo":"actionGetPublicInfo"
+      "doGetPublicInfo":"actionGetPublicInfo", 
     }),
+    ...postModule.mapActions({
+      "doUploadPost":"actionUploadPost",
+       "doGetArticle": "actionGetArticle",
+       "doLike":"actionLikePost",
+       "doUnlike":"actionDisLikePost",
+       "doLoadMore":"actionLoadMore"
+    }),
+     openProfile(id){
+        this.$router.push('/profile/'+id)
+    },
+    handleFlow(id){
+      console.log(id)
+    },
+    openDetail(id) {
+      this.$router.push('/detail/'+id)
+    },
+    onTouchLike(data){
+        if (data.isLike) {
+          data.isLike = false 
+          this.doUnlike(data._id)
+        } else {
+          data.isLike = true 
+          this.doLike(data._id)
+        }
+    },
+    onSubmitUpload(e) {
+      this.doUploadPost(e) 
+    },
     doActionPost({type}) {
       console.log(type,this.$refs.modal_post.showModal )
-      this.$refs.modal_post.showModal()
-      
+      this.$refs.modal_post.showModal() 
     },
-    getPublicProfile(){
-      
-         
+    getPublicProfile(){ 
       let info = getUserInfo()
-    
+      this.doGetArticle(info._id).then((x)=>{
+        this.disableLoadMore = false
+        this.articles = x.posts
+        this.nextPage = x.next_page
+      })
       this.doGetPublicInfo(info._id)
     },
     getDateOfBirth(){
-      return this.profileData && this.profileData.birthday
+      return Vue.filter('displayBirthday')(this.profileData && this.profileData.birthday); 
     },
     getRate() {
       return null
@@ -106,8 +142,7 @@ export default {
         data: data
       }]
     },
-    getSpecializedData(){
-      
+    getSpecializedData(){ 
       let specialized  = this.profileData &&this.profileData.profile && this.profileData.profile.specialized
       if (specialized == null || specialized.length < 1){
         return null
@@ -161,6 +196,20 @@ export default {
         })
       }
       return data
+    },
+    loadMoreData(){
+      if (this.nextPage == null){
+        this.disableLoadMore = true
+        return
+      }
+      this.disableLoadMore = true
+      this.doLoadMore(this.nextPage).then((x)=>{ 
+        this.articles.push(...x.posts)
+        if (x.posts.length > 0) {
+            this.disableLoadMore = false
+        }
+        this.nextPage = x.next_page
+      })
     }
   }, 
   watch:{
@@ -168,7 +217,31 @@ export default {
       if(val == true){
        this.$swal("",i18next.t(this.errorMessage))     
       }
+    },
+    uploadLoading(val){
+      console.log(val)
+      if (val){
+        return
+      }
+
+      let info = getUserInfo()
+      this.doGetArticle(info._id).then((x)=>{
+        console.log("xxx", x)
+        this.articles = x.posts
+        this.nextPage = x.next_page
+      }) 
     }
+
   }
 }
 </script>
+
+<style scoped>
+.btn-view-info a{
+text-decoration:  none;
+color:#333333;
+font-weight: bold;
+}
+.btn-view-info {
+background-color: #FAFAFA;}
+</style>

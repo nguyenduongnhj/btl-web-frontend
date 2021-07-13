@@ -1,6 +1,6 @@
 <template>
   <div class="box-shadown tutor-info">
-    <h2>Thông tin chi tiết</h2>
+    <h2>Thông Tin Chi Tiết</h2>
 
     <b-row class="content">
       <b-col xs="12" sm="12" md="6">
@@ -85,8 +85,7 @@
             class="btn-action"
             variant="success"
             >Lưu thông tin</b-button
-          >
-           
+          > 
         </b-col>
       </div>
       <ModalAddSkill  @submit="submitAddSkill($event)" ref="modal_skill"/>
@@ -109,8 +108,8 @@ export default {
       hasTutorInfo: false,
       introduce:"",
       hsh : {name:"THPT Việt Nam - Ba Lan",date_graduation: "2018"},
-      university : {name:"Học viện kỹ thuật mật mã",date_admission: "2018",major:"Công nghệ thông tin"},
-      other:"Khhasc",
+      university : {name:"Học viện kỹ thuật mật mã",date_admission: "2023",major:"Công nghệ thông tin"},
+      other:"đẹp trai",
       skills:[],
       certs:[],
       prize:[],

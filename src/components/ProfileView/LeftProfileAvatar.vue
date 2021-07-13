@@ -15,12 +15,13 @@
         </div>
         <hr style="margin: 10px -16px;background:#858585">
          <div class="flow-card clearfix">
-            <div class="icon"> </div>
+            <div class="icon"> <img src="@/assets/Images/profile/ic_flow.png"> </div>
             <div class="text">
-                <div>{{ (data && data.total_followers) || "0"}}</div>
+                <div>{{ (data && data.total_followings) || "0"}}</div>
                  <div class="desc">Người theo dõi</div>
             </div>
-            <b-button v-if="!hideFlowButton" @click="flow" class="btn-flow" size="md" variant="success"> Theo dõi</b-button>
+            <b-button v-if="!hideFlowButton && !isFlow" @click="flow" class="btn-flow" size="md" variant="success"> Theo dõi</b-button>
+             <b-button v-if="!hideFlowButton && isFlow" @click="flow" class="btn-flow" size="md" variant="warning"> Bỏ Theo dõi</b-button>
         </div> 
         
 
@@ -36,16 +37,16 @@ export default {
   components: {
 
   },
-  props: ["data","hideFlowButton"],
+  props: ["data","hideFlowButton","isFlow"],
   methods: {
     roleText(){
-       return   (this.data && this.data.roles &&(this.data.roles.indexOf("TUTOR") >= 0 )) ?"Người dùng" : "Người dùng"
+       return   (this.data && this.data.roles &&(this.data.roles.indexOf("TUTOR") >= 0 )) ?"Đẹp troai" : "Người dùng"
     },
     getAvatar(url) {
-      return buildAvatarUrl(url);
+      return buildAvatarUrl(url).replace(/\\/g,"/");
     },
     flow() {
-
+      this.$emit("flow",this.data._id)
     }
   }
 }
@@ -127,5 +128,13 @@ font-size: 12px;
 color:#858585
 }
 
+.icon{
+  padding: 8px
+}
+.icon img{
+width:100%;
+height: 100%;
+
+}
 
 </style>

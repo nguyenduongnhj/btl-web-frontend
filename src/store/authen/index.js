@@ -45,8 +45,6 @@ export default {
             state.registerLoading = false
             state.registerError = true
             state.message = message 
-           
-            console.log("failed "+message)
         },
         [REGISTER_SUCCESS](state, data) {
             state.registerLoading = true 

@@ -3,12 +3,12 @@
     <div style="position:relative">
       <b-row>
         <b-col md="4" sm="12">
-        <LeftProfileAvatar :hideFlowButton="hideFlowButton" :data ="profileData" /> 
+        <LeftProfileAvatar :isFlow="isFlowed" @flow="handleFlow($event)" :hideFlowButton="hideFlowButton" :data ="profileData" /> 
         <FloatNavigation  :data ="profileData"/>
-        <SingleCardInfo :title="getCity()" sub="Thành Phố đang sinh sống "/>
-        <SingleCardInfo :title="getDateOfBirth()" sub="Ngày sinh" />
+        <SingleCardInfo icon="ic_location.png" :title="getCity()" sub="Thành Phố đang sinh sống "/>
+        <SingleCardInfo icon ='ic_user.png' :title="getDateOfBirth()" sub="Ngày sinh" />
   
-        <SingleCardInfo :title="getRate()" sub="Mọi người đánh giá" /> 
+        <SingleCardInfo  icon='ic_rate.png' :title="getRate()" sub="Mọi người đánh giá" /> 
         </b-col>
         <b-col md="8" sm="12">
         <ProfileIntroduction  :data="profileData" />
@@ -23,13 +23,13 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import LeftProfileAvatar from "@/components/ProfileView/LeftProfileAvatar.vue"
 import SingleCardInfo from "@/components/ProfileView/SingleCardInfo.vue"
 import ProfileIntroduction from "@/components/ProfileView/ProfileIntroduction.vue"
 import MutilCardInfo from "@/components/ProfileView/MutilCardInfo.vue"
 import FloatNavigation from "@/components/Common/FloatNavigation.vue"
 import i18next from "@/common/i18n"
-
 import { createNamespacedHelpers } from 'vuex'
 import { isAuthen, getUserInfo } from "@/common/AppData"
 const userModule = createNamespacedHelpers('user')
@@ -53,29 +53,52 @@ export default {
           "loading":"isGetPublicInfoLoading",
           "isError":"isGetPublicInfoError",
           "profileData":"getPublicInfoData",
-          "errorMessage":"getPublicDataMessage"
+          "errorMessage":"getPublicDataMessage",
         }
         
         )
   },
   data(){
     return {
-      hideFlowButton: false
+      hideFlowButton: false,
+      isFlowed: false
     }
   },
   methods:{ 
     ...userModule.mapActions({ 
-      "doGetPublicInfo":"actionGetPublicInfo"
+      "doGetPublicInfo":"actionGetPublicInfo",
+      "doFlowUser":"actionFlowUser",
+       "doUnFlowUser":"actionUnFlowUser",
+      "doCheckFlowUser":"actionCheckFlowUser"
     }),
+     handleFlow(id){
+     if (this.isFlowed) {
+       this.isFlowed = false
+       this.doUnFlowUser(id)
+       this.profileData.total_followings -= 1
+     } else {
+       this.doFlowUser(id)
+       this.isFlowed = true
+        this.profileData.total_followings += 1
+     }
+    },
     getPublicProfile(){
-      this.doGetPublicInfo(this.$route.params.id)
+      let id = this.$route.params.id
+      this.doGetPublicInfo(id)
       if (isAuthen() ){
         let info = getUserInfo() 
-        this.hideFlowButton = this.$route.params.id == info._id
+        this.hideFlowButton =id == info._id
+        if (!this.hideFlowButton){
+           this.doCheckFlowUser(id).then(result=>{
+             console.log("checkflowresult",result)
+               this.isFlowed = result
+            })
+        }
       }
+     
     },
     getDateOfBirth(){
-      return this.profileData && this.profileData.birthday
+      return Vue.filter('displayBirthday')(this.profileData && this.profileData.birthday); 
     },
     getRate() {
       return null
@@ -101,7 +124,7 @@ export default {
     },
     getSpecializedData(){
       
-      let specialized  = this.profileData &&this.profileData.profile && this.profileData.profile.specialized
+      let specialized  = this.profileData &&this.profileData.profile && this.profileData.profile.certificate
       if (specialized == null || specialized.length < 1){
         return null
       }

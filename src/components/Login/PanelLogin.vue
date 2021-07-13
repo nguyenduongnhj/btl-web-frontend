@@ -6,7 +6,7 @@
                 <div class="fb-login-button" data-width="100%" data-size="large" data-button-type="login_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"></div>
             
                 <div class="note">
-                    Khi đăng nhập bằng facebook bạn mặc định đồng ý với <a href="#">Điều khoản dịch vụ</a> và  <a href="#">Chính sách bảo mật của </a> studyduo.com
+                    Khi đăng nhập bằng facebook bạn mặc định đồng ý với <a href="#">Điều khoản dịch vụ</a> và  <a href="#">Chính sách bảo mật của </a> appkhongten.com
                 </div>
             </div>
             <hr>
@@ -113,7 +113,7 @@ export default {
         }
           console.log('data',)
         this.changeUserInfo({name:val.user.first_name, avatar: val.user.avatar})
-         this.$router.push('/profile/'+val.user._id) 
+         this.$router.push('/me') 
       }
   }
 }

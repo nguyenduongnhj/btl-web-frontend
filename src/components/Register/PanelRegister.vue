@@ -8,7 +8,7 @@
                 <div class="fb-login-button" data-width="100%" data-size="large" data-button-type="login_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"></div>
             
                 <div class="note">
-                    Khi đăng nhập bằng facebook bạn mặc định đồng ý với <a href="#">Điều khoản dịch vụ</a> và  <a href="#">Chính sách bảo mật của </a> studyduo.com
+                    Khi đăng nhập bằng facebook bạn mặc định đồng ý với <a href="#">Điều khoản dịch vụ</a> và  <a href="#">Chính sách bảo mật của </a> appkhongten.com
                 </div>
             </div>
             <hr>
@@ -69,7 +69,7 @@
                         required
                         ></b-form-input> 
                     </b-form-group> 
-                     <div class="note" > <input type="checkbox" v-model="checkPrivacyPolicy"/>  &nbsp; Tôi đồng ý với <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách bảo mật</a> của studyduo.com </div>
+                     <div class="note" > <input type="checkbox" v-model="checkPrivacyPolicy"/>  &nbsp; Tôi đồng ý với <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách bảo mật</a> của appkhongten.com </div>
                 </div> 
                <div>
 
@@ -85,7 +85,7 @@
                 <div>
                  <br>
                     <strong> Khó khăn khi tạo tài khoản? </strong><br>
-                        Vui lòng gửi email hỗ trợ tới admin@studyduo.com để được hỗ trợ
+                        Vui lòng gửi email hỗ trợ tới caidmconcho@gmail.com để được hỗ trợ
                 </div>
             </div>
 

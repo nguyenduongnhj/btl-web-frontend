@@ -3,13 +3,27 @@
     <div id="nav-top">
       <div class="left"> </div>
       <div class="mid">
+       <div class="nav-button">
+          <router-link :to="'/feeds'">
+            <img  v-if="'NewsFeedView' != currentView" src="@/assets/Images/navs/ic_home.png"/>
+            <img  v-if="'NewsFeedView' == currentView" src="@/assets/Images/navs/ic_home_active.png"/> 
+            <div v-if="'NewsFeedView' == currentView" class="indicator"></div>
+          </router-link>
+       </div>
+       <div class="nav-button">
+          <router-link :to="'/groups'">
+            <img  v-if="'GroupView' != currentView" src="@/assets/Images/navs/ic_group_social.png"/>
+            <img  v-if="'GroupView' == currentView" src="@/assets/Images/navs/ic_home_active.png"/> 
+            <div v-if="'GroupView' == currentView" class="indicator"></div>
+          </router-link>
+       </div>
        
       </div>
       <div class="right d-block-md d-lg-block d-block-sm d-none">
         <table>
           <tr>
             <td class="item">
-              <router-link :to="'/profile/'+this.id">
+              <router-link :to="'/me'">
                 <div
                   class="avatar"
                   :style="{ backgroundImage: 'url(' + getAvatar(avatar) + ')' }"
@@ -82,7 +96,8 @@ export default {
   name: "HomeNavigationTopBar",
   data(){
     return {
-      id:""
+      id:"",
+      currentView:""
     }
   },
   computed: {
@@ -93,6 +108,7 @@ export default {
   },
   mounted(){
   this.id = getUserInfo()._id
+  this.currentView = this.$route.name
   },
   methods: {
     gotoSetting() {
@@ -106,19 +122,43 @@ export default {
       });
     },
     getAvatar(url) {
-      return buildAvatarUrl(url);
+      return buildAvatarUrl(url).replace(/\\/g,"/");
     },
     ...mapActions(["actionLogout", "actionChangeUserInfo"]),
   },
   watch:{
     userName(){
       this.id = getUserInfo()._id
+    },
+    $route(val){
+       this.currentView = val.name
     }
   }
 };
 </script>
 
 <style scoped>
+.nav-button{
+  height:64px;
+  display:inline-block;
+  position: relative;
+  cursor: pointer;
+  margin: 0px 20px;
+}
+.nav-button img {
+width: 43px;
+height: 43px;
+position: relative;
+top:10px
+}
+.nav-button .indicator{
+  position: absolute;
+  bottom: 4px;
+  height: 5px; 
+  width: calc(100% + 10px);
+  margin: 0px -5px;
+  background: #00b14f;
+}
 #nav-top {
   width: 100%;
   position: fixed;

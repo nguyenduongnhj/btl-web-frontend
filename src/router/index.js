@@ -67,7 +67,22 @@ const routes = [
     meta:{
       layout:"user"
     }
-  }
+  }, {
+    path: '/feeds',
+    name: 'NewsFeedView', 
+    component: () => import('../views/NewsFeedView.vue'),
+    meta:{
+      layout:"user"
+    }
+    
+  }, {
+    path: '/detail/:id',
+    name: 'PostDetailView', 
+    component: () => import('../views/PostDetailView.vue'),
+    meta:{
+      layout:"user"
+    } 
+  } 
 ]
 
 const router = new VueRouter({

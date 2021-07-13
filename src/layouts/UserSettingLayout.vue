@@ -2,8 +2,9 @@
 <template>
   <div> 
     <HomeNavigationTopBar/> 
-    <b-container>
-        <br>
+   
+    <div id="app-container">
+     <b-container> 
         <div style="position:relative">
             <b-row>
                 <b-col md="4" sm="12">
@@ -15,8 +16,6 @@
             </b-row>
         </div>
     </b-container>
-    <div id="app-container">
-    
     </div>
   </div>
 </template>
@@ -46,8 +45,9 @@ export default {
           this.actionLogout().then(()=>{
             location.href="/#/"
           })
+          this.actionChangeUserInfo({ avatar: "", name: "" })
       },
-      ...mapActions(["actionLogout"])
+      ...mapActions(["actionLogout","actionChangeUserInfo"])
   }
 }
 </script>

@@ -1,9 +1,9 @@
 <template>
   <b-modal :hideFooter="true" :hideHeader="true" centered id="modal-3" title="BootstrapVue">
     <h3>Tạo bài viết</h3>
-      <div style="max-height:300px; overflow-y:auto">
+      <div @paste="onPaste" style="max-height:300px; overflow-y:auto">
           <div class="search-box">
-            <textarea v-model="feedText" placeholder="Hãy chia sẻ gì đó"/>
+            <textarea  v-model="feedText" placeholder="Hãy chia sẻ gì đó"/>
           </div>
           <div class="image-box">
               <div v-for="img in prepareUploads" :key="img.url" class="image-item">
@@ -15,7 +15,7 @@
           </div>
       </div> 
        <div class="post-toolbar">
-         <img class="avatar-view"/> 
+         <img class="avatar-view" :src="data.avatar | avatar" /> 
          <div class="more-view">
            <div style="float:right">
              <img @click="openSelectImage" class="button" src="@/assets/Images/feed/ic_post_image.png"/>
@@ -27,7 +27,7 @@
        <br/>
        <input type="file" name="file" ref="input_file" style="display:none"  v-on:change="handleFileUpload()" />
        <div style="padding: 10px">
-         <b-button @click="submitPost" class="w-100" block variant="success" disabled> Đăng</b-button>
+         <b-button  @click="submitPost" class="w-100" block variant="success" :disabled="feedText=='' && prepareUploads.length == 0"> Đăng</b-button> 
        </div>
   </b-modal>
 </template>
@@ -40,9 +40,10 @@ export default {
   data() {
     return {
       feedText: "",
-      prepareUploads : []
+      prepareUploads : [], 
     };
   }, 
+  props:["data"],
   components: {},
   methods: {
     showModal() {
@@ -54,8 +55,40 @@ export default {
     toggleModal() {
       this.$root.$emit("bv::toggle::modal", "modal-3", "#btnToggle");
     },
-    submitPost(){
+     onPaste(event){
+         var item = null;
+ 
+        for (var i = 0; i < event.clipboardData.items.length ; i++) {
+          let temp = event.clipboardData.items[i]
+          if (temp.kind == "file"){
+            item =  temp
+          }
+        }
 
+        if (item == null){
+          return
+        } 
+        
+        if (item.type.indexOf("image") === 0)
+        {
+            var blob = item.getAsFile();
+            
+            var reader = new FileReader();
+            reader.onload =(event) => {
+                 console.log(event)
+                  this.prepareUploads.push({file:blob ,url:  event.target.result })
+            }; 
+            reader.readAsDataURL(blob);
+        }
+    },
+    submitPost(){
+        this.$emit("submit",{
+          content:{text:this.feedText, image: this.prepareUploads},
+          type: "POST" 
+        })
+        this.hideModal()
+        this.feedText = ""
+        this.prepareUploads = []
     },
      handleFileUpload() { 
       let file = this.$refs.input_file.files[0];
@@ -74,8 +107,7 @@ export default {
       }
     }
   },
-  watch:{
-    
+  watch:{ 
   }
 };
 </script>

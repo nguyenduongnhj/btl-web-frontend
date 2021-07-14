@@ -15,7 +15,7 @@ export default {
 </script>
 <style scoped>
 img {
-    max-height: 750px;
+    max-height: 100%;
     object-fit: cover;
     object-position: top center; 
 }

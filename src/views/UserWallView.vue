@@ -12,8 +12,8 @@
         <div class="box-shadown btn-view-info" style="text-align:center" ><router-link :to="'/profile/'+profileData._id">Xem thông tin chi tiết</router-link></div>
         </b-col>
         <b-col md="8" sm="12">
-          <PostArticleBox @action="doActionPost" :user="profileData"/>
-          <PostBoxItem  @openDetail="openDetail($event)" @profileView="openProfile($event)" @like="onTouchLike($event)" v-for="item in articles" :key="item.id" :data="item"/>
+          <PostArticleBox v-if="profileData && authenUser && profileData._id == authenUser._id" @action="doActionPost" :user="profileData"/>
+          <PostBoxItem :box="true" @openDetail="openDetail($event)" @profileView="openProfile($event)" @like="onTouchLike($event)" v-for="item in articles" :key="item.id" :data="item"/>
         </b-col> 
       </b-row>
     </div>
@@ -48,6 +48,12 @@ export default {
     PostBoxItem
   },
   mounted(){ 
+     if (this.$route.params.id != null) {
+        this.profileId = this.$route.params.id
+      } else {
+         this.profileId  = null
+      }
+
     if (isAuthen()) {
         this.getPublicProfile()
     }
@@ -58,6 +64,7 @@ export default {
       articles:[],
       nextPage: null,
       disableLoadMore: false,
+      authenUser: null
     }
   },
   computed:{
@@ -69,7 +76,8 @@ export default {
           "errorMessage":"getPublicDataMessage",  
         } ), 
         ...postModule.mapState({
-           "uploadLoading":"isUpLoading"
+           "uploadLoading":"isUpLoading",
+           "upPostData":"upPostData"
         })
   },
   methods:{ 
@@ -84,7 +92,7 @@ export default {
        "doLoadMore":"actionLoadMore"
     }),
      openProfile(id){
-        this.$router.push('/profile/'+id)
+        this.$router.push('/wall/'+id)
     },
     handleFlow(id){
       console.log(id)
@@ -109,13 +117,18 @@ export default {
       this.$refs.modal_post.showModal() 
     },
     getPublicProfile(){ 
+      
       let info = getUserInfo()
-      this.doGetArticle(info._id).then((x)=>{
+      this.authenUser = info
+      if ( this.profileId  == null) {
+         this.profileId  = info._id
+      }
+      this.doGetArticle(this.profileId).then((x)=>{
         this.disableLoadMore = false
         this.articles = x.posts
         this.nextPage = x.next_page
       })
-      this.doGetPublicInfo(info._id)
+      this.doGetPublicInfo(this.profileId)
     },
     getDateOfBirth(){
       return Vue.filter('displayBirthday')(this.profileData && this.profileData.birthday); 
@@ -213,6 +226,15 @@ export default {
     }
   }, 
   watch:{
+    $route(){
+      console.log("123")
+      if (this.$route.params.id != null) {
+        this.profileId = this.$route.params.id
+      } else {
+         this.profileId  = null
+      }
+      this.getPublicProfile()
+    },
     isError(val){
       if(val == true){
        this.$swal("",i18next.t(this.errorMessage))     
@@ -224,12 +246,17 @@ export default {
         return
       }
 
-      let info = getUserInfo()
-      this.doGetArticle(info._id).then((x)=>{
-        console.log("xxx", x)
-        this.articles = x.posts
-        this.nextPage = x.next_page
-      }) 
+      
+    
+    },
+    upPostData(val){
+      console.log("ava", val)
+      if (val == null) {
+        return
+      }
+      let data = [...this.articles]
+      data.splice(0,0,val)
+      this.articles = data
     }
 
   }

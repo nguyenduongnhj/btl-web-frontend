@@ -5,35 +5,45 @@
         <b-col md="2" sm="12" style="">  
         </b-col>
         <b-col md="8" sm="12" style=""> 
-          <PostBoxItem @openDetail="openDetail($event)" @profileView="openProfile($event)" @like="onTouchLike($event)" v-for="item in articles" :key="item.id" :data="item"/>
+           <PostArticleBox @action="doActionPost" :user="authenUser"/>
+          <PostBoxItem @openDetail="openDetail($event)" @profileView="openProfile($event)" @like="onTouchLike($event)" v-for="item in articles" :key="item.id" :data="item" :box="true"/>
            <scroll-loader :loader-method="loadMoreData" :loader-disable="disableLoadMore"></scroll-loader>
         </b-col> 
         <b-col md="2" sm="12" style="">  
         </b-col>
       </b-row>
     </div>
-    
+    <ModalPostArticle @submit="onSubmitUpload($event)" :data="authenUser" ref="modal_post"/>
   </b-container>
 </template>
 
 <script>
-// import PostArticleBox from "@/components/UserWall/PostArticleBox.vue"
+ import PostArticleBox from "@/components/UserWall/PostArticleBox.vue"
 import i18next from "@/common/i18n" 
 import PostBoxItem from "@/components/UserWall/PostBoxItem.vue"
 import { createNamespacedHelpers } from 'vuex' 
+import { isAuthen, getUserInfo } from "@/common/AppData"
+import ModalPostArticle from "@/components/Modal/ModalPostArticle.vue"
+
 const userModule = createNamespacedHelpers('user')
 const postModule = createNamespacedHelpers('post')
 export default {
   name: 'NewsFeedView',
   components: {   
-  //  PostArticleBox, 
-    PostBoxItem
+    PostArticleBox, 
+    PostBoxItem,
+    ModalPostArticle,
   },
   mounted(){ 
      this.getPublicProfile()
+     if(isAuthen()){
+       let info = getUserInfo()
+       this.authenUser = info
+     }
   },
   data(){
     return {
+      authenUser:null,
       articles:[],
       nextPage: null,
       disableLoadMore: false
@@ -48,7 +58,8 @@ export default {
           "errorMessage":"getPublicDataMessage",  
         } ), 
         ...postModule.mapState({
-           "uploadLoading":"isUpLoading"
+           "uploadLoading":"isUpLoading",
+           "upPostData":"upPostData"
         })
   },
   methods:{ 
@@ -62,6 +73,7 @@ export default {
        "doUnlike":"actionDisLikePost",
        "doLoadMore":"actionLoadMore"
     }),
+    
     openDetail(id) {
       this.$router.push('/detail/'+id)
     },
@@ -69,7 +81,7 @@ export default {
       console.log(id)
     },
     openProfile(id){
-        this.$router.push('/profile/'+id)
+        this.$router.push('/wall/'+id)
     },
     onTouchLike(data){
         if (data.isLike) {
@@ -118,15 +130,19 @@ export default {
        this.$swal("",i18next.t(this.errorMessage))     
       }
     },
-    uploadLoading(val){
-      console.log(val)
+    uploadLoading(val){ 
       if (val){
         return
-      } 
-      this.doGetArticle().then((x)=>{
-        this.articles = x.data
-        this.nextPage = x.next_page
-      }) 
+      }  
+    },
+    upPostData(val){
+      console.log("ava", val)
+      if (val == null) {
+        return
+      }
+      let data = [...this.articles]
+      data.splice(0,0,val)
+      this.articles = data
     }
 
   }

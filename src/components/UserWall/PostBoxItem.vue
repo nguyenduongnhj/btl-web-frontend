@@ -16,7 +16,7 @@
             <ImageLayout :images="data.content.image.map(m=>getImage(m))"/>
         </div>
         <b-row class="post-toolbar">
-            <b-col col="12" md="12">
+            <b-col col="12" md="12" sm="12" xs="12">
              <b-row class="clear-fix" style="position:relative;" >
                 <b-col > <div v-if="data && data.total_like != 0"> <img width="20" style="position:relative;top:-2px" src="@/assets/Images/feed/ic_red_heart.png">  {{data && data.total_like}} </div> </b-col>   
                 <b-col > <div v-if= "data && data.total_comment != 0"  style="text-align:right">{{data && data.total_comment}}  bình luận</div> </b-col>

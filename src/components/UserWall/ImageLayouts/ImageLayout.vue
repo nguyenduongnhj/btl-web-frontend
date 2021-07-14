@@ -28,6 +28,6 @@ export default {
 .image-container{
     background-color: #f2efdf;
     overflow: hidden;
-    text-align: center;
+    text-align: center; 
 }
 </style>

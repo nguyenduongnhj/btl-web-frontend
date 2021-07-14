@@ -1,5 +1,5 @@
 
-export const HOST = "http://localhost:3000"
+export const HOST = "http://222.252.92.106:3000"
 
 export const endpoint = {
     login: "auth/login",

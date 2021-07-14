@@ -81,7 +81,15 @@ const routes = [
     component: () => import('../views/PostDetailView.vue'),
     meta:{
       layout:"user"
-    } 
+    }
+  },
+  {
+    path: '/wall/:id',
+    name: 'WallNewsFeedView', 
+    component: () => import('../views/UserWallView.vue'),
+    meta:{
+      layout:"user"
+    }
   } 
 ]
 
